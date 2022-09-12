@@ -46,7 +46,7 @@ common_data:
       url: "https://github.com/aoscloud/meta-aos.git"
       rev: v5.2.1
     - type: git
-      url: "https://github.com/xen-troops/meta-xt-prod-aos-rcar.git"
+      url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
       rev: main
 
   # Common configuration options for all yocto-based domains
@@ -146,7 +146,7 @@ components:
         - "../meta-xt-common/meta-xt-control-domain"
         - "../meta-xt-rcar/meta-xt-rcar-dom0"
         - "../meta-aos"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-dom0"
+        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-dom0"
 
       build_target: core-image-thin-initramfs
       external_src:
@@ -215,8 +215,8 @@ components:
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-domx"
         - "../meta-aos"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domd"
+        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domx"
+        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domd"
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/Image"
@@ -265,8 +265,8 @@ components:
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-aos"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domf"
+        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domx"
+        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domf"
 
       build_target: core-image-minimal
       target_images:
