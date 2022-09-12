@@ -216,7 +216,7 @@ components:
         - "../meta-xt-rcar/meta-xt-rcar-domx"
         - "../meta-aos"
         - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domx"
-        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domd"
+        - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domd"
 
       target_images:
         - "tmp/deploy/images/%{MACHINE}/Image"
