@@ -9,6 +9,10 @@ Those layers *may* be added and used manually, but they were written
 with [Moulin](https://moulin.readthedocs.io/en/latest/) build system,
 as Moulin-based project files provide correct entries in local.conf
 
+## Status
+
+This is initial revision 1.0.0 based on meta-aos revision 5.2.1.
+
 ## Moulin project file
 
 Work is still in progress, but right now the following features are tested and working:

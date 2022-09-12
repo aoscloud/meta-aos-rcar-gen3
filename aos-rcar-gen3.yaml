@@ -29,25 +29,25 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "git://git.yoctoproject.org/poky"
-      rev: dunfell
+      rev: 0566db5
     - type: git
       url: "git://git.openembedded.org/meta-openembedded"
-      rev: dunfell
+      rev: 6792ebd
     - type: git
       url: "git://git.yoctoproject.org/meta-virtualization"
-      rev: dunfell
+      rev: a63a54d
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: master
+      rev: 9d218e5
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: master
+      rev: 3f40999
     - type: git
       url: "https://github.com/aoscloud/meta-aos.git"
       rev: v5.2.1
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: main
+      rev: v1.0.0
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -171,7 +171,7 @@ components:
         rev: Renesas-Yocto-v5.1-patched
       - type: git
         url: "git://git.yoctoproject.org/meta-selinux"
-        rev: dunfell
+        rev: 1a13839
 
     builder:
       type: yocto
@@ -231,10 +231,10 @@ components:
       - *COMMON_SOURCES
       - type: git
         url: "git://git.yoctoproject.org/meta-arm"
-        rev: dunfell
+        rev: 6954705
       - type: git
         url: "git://git.yoctoproject.org/meta-security"
-        rev: dunfell
+        rev: c62970f
 
     builder:
       type: yocto
