@@ -266,7 +266,7 @@ components:
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-aos"
         - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domx"
-        - "../meta-aos-rcar-gen3/meta-xt-prod-aos-rcar-domf"
+        - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domf"
 
       build_target: core-image-minimal
       target_images:
