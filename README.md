@@ -1,4 +1,4 @@
-# meta-xt-prod-aos-rcar
+# meta-aos-rcar-gen3
 
 This repository contains Renesas RCAR Gen3-specific Yocto layers for
 Aos distro and `moulin` project file to build it. Layers in this
@@ -48,35 +48,36 @@ Features that are present but not tested:
 ### Fetching
 
 You can fetch/clone this whole repository, but you actually need only
-one file from it: `prod-aos-rcar.yaml`. During build `moulin` will
+one file from it: `aos-rcar-gen3.yaml`. During build `moulin` will
 fetch this repository again into `yocto/` directory. So, to avoid
-possible confusion, we recommend to download only `prod-aos-rcar.yaml`:
+possible confusion, we recommend to download only `aos-rcar-gen3.yaml`:
 
 ```sh
-curl -O https://raw.githubusercontent.com/xen-troops/meta-xt-prod-aos-rcar/master/prod-aos-rcar.yaml
+curl -O https://raw.githubusercontent.com/aoscloud/meta-aos-rcar-gen3/master/aos-rcar-gen3.yaml
 ```
 
 ### Building
 
-Moulin is used to generate Ninja build file: `moulin
-prod-aos-rcar.yaml`. This project provides a number
-of additional options. You can use check them with
-`--help-config` command line option:
+Moulin is used to generate Ninja build file: `moulin aos-rcar-gen3.yaml`.
+This project provides a number of additional options. You can use check them
+with `--help-config` command line option:
 
 ```sh
-moulin prod-aos-rcar.yaml --help-config
-usage: moulin prod-aos-rcar.yaml
-       [--MACHINE {h3ulcb-4x2g-ab,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-x-h3-4x2g}]
+moulin aos-rcar-gen3.yaml --help-config
+usage: /home/oleksandr_grytsov/.local/bin/moulin aos-rcar-gen3.yaml
+   [--MACHINE {h3ulcb-4x2g-ab,h3ulcb-4x2g,h3ulcb-4x2g-kf,m3ulcb,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,salvator-x-h3}]
+   [--VIS_DATA_PROVIDER {telemetryemulator,renesassimulator}]
 
-Config file description: Xen-Troops development setup for Renesas RCAR Gen3
-hardware
+Config file description: Aos development setup for Renesas RCAR Gen3 hardware
 
 optional arguments:
-  --MACHINE {h3ulcb-4x2g-ab,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-x-h3-4x2g}
+  --MACHINE {h3ulcb-4x2g-ab,h3ulcb-4x2g,h3ulcb-4x2g-kf,m3ulcb,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,salvator-x-h3}
                         RCAR Gen3-based device
+  --VIS_DATA_PROVIDER {telemetryemulator,renesassimulator}
+                        Sepecifieds plugin for VIS automotive data
 ```
 
-To build for AosBox use the following command line: `moulin prod-aos-rcar.yaml`.
+To build for AosBox use the following command line: `moulin aos-rcar-gen3.yaml`.
 
 Moulin will generate `build.ninja` file. After that - run `ninja` to
 build the images. This will take some time and disk space, as it will
@@ -113,7 +114,7 @@ In standalone mode`rouge` accepts the same parameters like
 You can prepare image by running:
 
 ```sh
-rouge prod-aos-rcar.yaml -i full
+rouge aos-rcar-gen3.yaml -i full
 ```
 
 This will create file `full.img` in your current directory.
@@ -121,7 +122,7 @@ This will create file `full.img` in your current directory.
 Also you can write image directly to a SD card by running:
 
 ```sh
-sudo rouge prod-aos-rcar.yaml -i full -so /dev/sdX
+sudo rouge aos-rcar-gen3.yaml -i full -so /dev/sdX
 ```
 
 **BE SURE TO PROVIDE CORRECT DEVICE NAME**. `rouge` have no
@@ -138,7 +139,8 @@ For more information about `rouge` check its
 * Proper board configuration file should be set for the target systemd on the Aos cloud. doc/boardconfig.json contains
 board configuration for `h3ulcb-4x2g-ab` board. For other boards, component ids should be changed according to the
 following scheme: `${AOS_BOARD_MODEL}-${AOS_BOARD_VERSION}-dom[0,d,f]`;
-* Updating Dom0 requires special u-boot environment variables to be set: see doc/u-boot-env.md.
+* Updating Dom0 requires special u-boot environment variables to be set: see doc/u-boot-env.md;
+* Updating Dom0 works for eMMC only.
 
 ### Generating Aos update image
 
