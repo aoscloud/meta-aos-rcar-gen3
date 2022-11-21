@@ -41,7 +41,7 @@ common_data:
       rev: "e27c46b"
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: "3f40999"
+      rev: "5d4e9d1"
     - type: git
       url: "https://github.com/aoscloud/meta-aos.git"
       rev: "v6.0.2"
@@ -211,6 +211,7 @@ components:
         - "../meta-openembedded/meta-filesystems"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-xt-common/meta-xt-driver-domain"
+        - "../meta-xt-rcar/meta-oe-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-domx"
