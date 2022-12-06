@@ -24,6 +24,12 @@ variables:
   AOS_BUNDLE_DOMD_TYPE: "full"
   AOS_BUNDLE_DOMF_TYPE: "full"
 
+  # Update modules
+  AOS_UM_UPDATE_MODULES: "updatemodules/overlaysystemd"
+
+  #Service configuration
+  AOS_DOMF_UM_CONFIG: "aos_updatemanager.cfg"
+
 common_data:
   # Sources used by all yocto-based domains
   sources: &COMMON_SOURCES
@@ -254,6 +260,9 @@ components:
         # Aos configuration
         - [AOS_RUNNER, "crun"]
         - [DOMF_IMAGE_VERSION, "%{AOS_DOMF_IMAGE_VERSION}"]
+
+        #Aos update manager configuration
+        - [AOS_DOMF_UM_CONFIG, "%{AOS_DOMF_UM_CONFIG}"]
 
       layers:
         - "../meta-openembedded/meta-filesystems"
@@ -495,3 +504,31 @@ parameters:
       overrides:
         variables:
           AOS_VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+
+  #Enable sshmodule update
+  ENABLE_SSH_UPDATE:
+    desc: "Add ssh update module to domf"
+    "no":
+      default: true
+    "yes":
+      overrides:
+        components:
+          domf:
+            builder:
+              conf:
+                - [AOS_UM_UPDATE_MODULES_appemd, " updatemodules/sshmodule"]
+
+  # Build to manage cockpit
+  SUPPORT_COCKPIT:
+    desc: "Build teh configuration for cockpit demo."  
+    "no":
+      default: true
+    "yes":
+      overrides:
+        components:
+          domf:
+            builder:
+              conf:
+                - [AOS_DOMF_UM_CONFIG, "aos_cockpit_updatemanager.cfg"]
+                - [OVERRIDES_append, ":cockpit"]
+
