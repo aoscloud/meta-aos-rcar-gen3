@@ -47,7 +47,7 @@ common_data:
       rev: "v6.0.2"
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: "v2.0.0"
+      rev: "feature_multinode"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
