@@ -19,6 +19,18 @@ IMAGE_INSTALL_append = " \
     aos-updatemanager \
 "
 
+#telemetry related components
+IMAGE_INSTALL_cockpit_append = " \
+    python3-compression \
+    python3-crypt \
+    python3-json \
+    python3-misc \
+    python3-shell \
+    python3-six \
+    python3-threading \
+    python3-websocket-client \
+"
+
 # Aos related tasks
 
 ROOTFS_POSTPROCESS_COMMAND += "set_rootfs_version; "
