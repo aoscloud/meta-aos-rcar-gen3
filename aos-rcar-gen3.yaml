@@ -57,8 +57,11 @@ common_data:
     - [SSTATE_DIR, "${TOPDIR}/../../../common_data/sstate"]
     - [DL_DIR, "${TOPDIR}/../../../common_data/downloads"]
 
-    # Skip warning about missing "virtualization" distro feature
-    - [SKIP_META_VIRT_SANITY_CHECK, "1"]
+    - [MACHINE, "%{MACHINE}"]
+    - [SOC_FAMILY, "%{SOC_FAMILY}"]
+
+    # Add systemd configuration
+    - [INIT_MANAGER, "systemd"]
 
     # Use hypervisor console on all guests
     - [SERIAL_CONSOLES, "115200;hvc0"]
@@ -66,67 +69,21 @@ common_data:
     # Configure number of supported GPU virtual guests
     - [XT_PVR_NUM_OSID, "%{XT_PVR_NUM_OSID}"]
 
-    # Remove features that we are not using
-    - [
-        DISTRO_FEATURES:remove,
-        "x11 gtk gobject-introspection-data wifi nfc bluetooth irda zeroconf 3g sysvinit",
-      ]
-
-    # displbe and sndbe
-    - [DISTRO_FEATURES:append, " displbe sndbe"]
-
-  # Conf options for domain that are built used renesas layer
-  domd_domu_conf: &DOMD_DOMU_CONF
-    - [MACHINE, "%{MACHINE}"]
-    - [SOC_FAMILY, "%{SOC_FAMILY}"]
-
-    # Add systemd configuration
-    - [INIT_MANAGER, "systemd"]
-
-    # add the static lib to SDK toolchain
-    - [SDKIMAGE_FEATURES:append, " staticdev-pkgs"]
-
-    # Enable Gfx Pkgs
-    - [MACHINE_FEATURES:append, " gsx"]
-    - [
-        BB_MULTI_PROVIDER_ALLOWED:append,
-        " virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2",
-      ]
-
-    # for Wayland/Weston
-    - [DISTRO_FEATURES_NATIVESDK:append, " wayland"]
-    - [DISTRO_FEATURES:append, " pam"]
-    - [PREFERRED_PROVIDER_virtual/libgles1, ""]
-    - [PREFERRED_PROVIDER_virtual/libgles2, "gles-user-module"]
-    - [PREFERRED_PROVIDER_virtual/libgles3, "gles-user-module"]
-    - [PREFERRED_PROVIDER_virtual/egl, "libegl"]
-    - [PREFERRED_PROVIDER_virtual/libgl, ""]
-    - [PREFERRED_PROVIDER_virtual/mesa, ""]
-    - [PREFERRED_PROVIDER_virtual/libgbm, "libgbm"]
-    - [PREFERRED_PROVIDER_libgbm-dev, "libgbm"]
-    - [BBMASK:append, " mesa-gl"]
+    # Skip warning about missing "virtualization" distro feature
+    - [SKIP_META_VIRT_SANITY_CHECK, "1"]
 
     # Add for gstreamer plugins ugly
     - [LICENSE_FLAGS_ACCEPTED, "commercial"]
 
-    # Configuration for USB 3.0
-    - [MACHINE_FEATURES:append, " usb3"]
-
-    # Add Capacity Aware migration Strategy (CAS)
-    - [MACHINE_FEATURES:append, " cas"]
-
-    # Remove ptest to reduce the build time,
-    # remove x11 and vulkan to avoid error after removing mesa
-    - [DISTRO_FEATURES:remove, " ptest x11 vulkan"]
+    # Initramfs configuration
+    - [INITRAMFS_IMAGE, "aos-image-initramfs"]
+    - [INITRAMFS_IMAGE_BUNDLE, "0"]
+    - [INITRAMFS_FSTYPES, "cpio.gz"]
 
     # HACK: force ipk instead of rpm b/c it makes troubles to PVR UM build otherwise
     - [PACKAGE_CLASSES, "package_ipk"]
 
-    # Additional testing and debug tools
-    - [IMAGE_INSTALL:append, " expect ltrace evtest"]
-
-    # Install some apps to test GPU/Display
-    - [IMAGE_INSTALL:append, " glmark2 kmscube"]
+    # BBMASK
 
     - [XT_USE_DDK1_11, "%{XT_USE_DDK1_11}"]
 
@@ -144,10 +101,65 @@ common_data:
         " ${@bb.utils.contains('XT_USE_DDK1_11', '1', '', 'meta-xt-rcar-fixups/recipes-graphics/packagegroups/packagegroup-graphic-renesas.bbappend', d)}",
       ]
 
-    # Initramfs configuration
-    - [INITRAMFS_IMAGE, "aos-image-initramfs"]
-    - [INITRAMFS_IMAGE_BUNDLE, "0"]
-    - [INITRAMFS_FSTYPES, "cpio.gz"]
+    - [BBMASK:append, " mesa-gl"]
+
+    # Preferred providers
+
+    - [PREFERRED_PROVIDER_virtual/libgles1, ""]
+    - [PREFERRED_PROVIDER_virtual/libgles2, "gles-user-module"]
+    - [PREFERRED_PROVIDER_virtual/libgles3, "gles-user-module"]
+    - [PREFERRED_PROVIDER_virtual/egl, "libegl"]
+    - [PREFERRED_PROVIDER_virtual/libgl, ""]
+    - [PREFERRED_PROVIDER_virtual/mesa, ""]
+    - [PREFERRED_PROVIDER_virtual/libgbm, "libgbm"]
+    - [PREFERRED_PROVIDER_libgbm-dev, "libgbm"]
+
+    # Distro features
+
+    # Remove features that we are not using
+    - [
+        DISTRO_FEATURES:remove,
+        "x11 gtk gobject-introspection-data wifi nfc bluetooth irda zeroconf 3g sysvinit",
+      ]
+
+    # Remove ptest to reduce the build time,
+    # remove x11 and vulkan to avoid error after removing mesa
+    - [DISTRO_FEATURES:remove, " ptest x11 vulkan"]
+
+    # displbe and sndbe
+    - [DISTRO_FEATURES:append, " displbe sndbe"]
+
+    # for Wayland/Weston
+    - [DISTRO_FEATURES_NATIVESDK:append, " wayland"]
+    - [DISTRO_FEATURES:append, " pam"]
+
+    # Machine features
+
+    # Enable Gfx Pkgs
+    - [MACHINE_FEATURES:append, " gsx"]
+    - [
+        BB_MULTI_PROVIDER_ALLOWED:append,
+        " virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2",
+      ]
+
+    # Configuration for USB 3.0
+    - [MACHINE_FEATURES:append, " usb3"]
+
+    # Add Capacity Aware migration Strategy (CAS)
+    - [MACHINE_FEATURES:append, " cas"]
+
+    # SDK features
+
+    # add the static lib to SDK toolchain
+    - [SDKIMAGE_FEATURES:append, " staticdev-pkgs"]
+
+    # Image install
+
+    # Additional testing and debug tools
+    - [IMAGE_INSTALL:append, " expect ltrace evtest"]
+
+    # Install some apps to test GPU/Display
+    - [IMAGE_INSTALL:append, " glmark2 kmscube"]
 
   # The same set of layers and configs is used both in DomD and DomU
   # to build a DDK from source code
@@ -219,7 +231,6 @@ components:
       work_dir: "%{DOMD_BUILD_DIR}"
       conf:
         - *COMMON_CONF
-        - *DOMD_DOMU_CONF
         - [XT_DOM_NAME, "domd"]
         - [XT_OP_TEE_FLAVOUR, "%{XT_OP_TEE_FLAVOUR}"]
         - [XT_DEVICE_TREES, "%{XT_DOMD_DTB_NAME} %{XT_XEN_DTB_NAME}"]
