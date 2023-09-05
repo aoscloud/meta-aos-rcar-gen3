@@ -346,7 +346,6 @@
 &pciec0			{ xen,passthrough; };
 &hscif1			{ xen,passthrough; };
 &sdhi0			{ xen,passthrough; };
-&sdhi2			{ xen,passthrough; };
 &sdhi3			{ xen,passthrough; };
 &scif1			{ xen,passthrough; };
 &src0			{ xen,passthrough; };
@@ -402,4 +401,3 @@
 &i2c_dvfs		{ xen,passthrough; };
 &pmic			{ xen,passthrough; };
 &rt_dmac0		{ xen,passthrough; };
-
