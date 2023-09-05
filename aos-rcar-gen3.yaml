@@ -48,6 +48,9 @@ common_data:
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
       rev: "master"
+    - type: git
+      url: "https://github.com/aoscloud/meta-aos.git"
+      rev: "develop"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -140,6 +143,11 @@ common_data:
         BBMASK:append,
         " ${@bb.utils.contains('XT_USE_DDK1_11', '1', '', 'meta-xt-rcar-fixups/recipes-graphics/packagegroups/packagegroup-graphic-renesas.bbappend', d)}",
       ]
+
+    # Initramfs configuration
+    - [INITRAMFS_IMAGE, "aos-image-initramfs"]
+    - [INITRAMFS_IMAGE_BUNDLE, "0"]
+    - [INITRAMFS_FSTYPES, "cpio.gz"]
 
   # The same set of layers and configs is used both in DomD and DomU
   # to build a DDK from source code
@@ -249,6 +257,7 @@ components:
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-domx"
         - "../meta-xt-rcar/meta-xt-rcar-gles_common"
+        - "../meta-aos"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domx"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-driver-domain"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domd"
