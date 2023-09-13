@@ -421,7 +421,6 @@
 
 &intc_ex		{ xen,passthrough; };
 &sdhi0			{ xen,passthrough; };
-&sdhi2			{ xen,passthrough; };
 &src0			{ xen,passthrough; };
 &src1			{ xen,passthrough; };
 &src2			{ xen,passthrough; };
