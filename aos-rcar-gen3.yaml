@@ -21,14 +21,22 @@ variables:
 
   # Aos config
 
-  AOS_UNIT_MODEL: "rcar-demo2023-zephyr"
+  AOS_BUNDLE_IMAGE_VERSION: "3.0.0"
+  AOS_ROOTFS_REF_VERSION: "2.0.0"
+
+  AOS_UNIT_MODEL: "rcar-gen3"
   AOS_UNIT_VERSION: "1.0"
 
-  AOS_DOM0_NODE_ID: "gen3-dom0"
-  AOS_DOM0_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_DOM0_NODE_ID}"
+  AOS_DOM0_NODE_ID: "dom0"
+  AOS_DOMD_NODE_ID: "domd"
+  AOS_DOMD_HOST_NAME: "domd"
 
-  AOS_DOMD_NODE_ID: "gen3-domd"
-  AOS_DOMD_NODE_TYPE: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{AOS_DOMD_NODE_ID}"
+  AOS_MAIN_NODE_ID: "%{AOS_DOMD_NODE_ID}"
+  AOS_MAIN_NODE_HOSTNAME: "%{AOS_DOMD_HOST_NAME}"
+
+  AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
+
+  AOS_BASE_IMAGE: "core-image-weston"
 
 common_data:
   # Sources used by all yocto-based domains
@@ -161,6 +169,18 @@ common_data:
     # Install some apps to test GPU/Display
     - [IMAGE_INSTALL:append, " glmark2 kmscube"]
 
+    # Aos configuration
+
+    - [AOS_UNIT_MODEL, "%{AOS_UNIT_MODEL}"]
+    - [AOS_UNIT_VERSION, "%{AOS_UNIT_VERSION}"]
+    - [AOS_MAIN_NODE_ID, "%{AOS_MAIN_NODE_ID}"]
+    - [AOS_MAIN_NODE_HOSTNAME, "%{AOS_MAIN_NODE_HOSTNAME}"]
+    - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_COMPONENT_PREFIX}"]
+
+    # Image versions
+    - [AOS_ROOTFS_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
+    - [AOS_BOOT_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
+
   # The same set of layers and configs is used both in DomD and DomU
   # to build a DDK from source code
   ddk_source_overrides: &DDK_SOURCE_OVERRIDES
@@ -201,7 +221,7 @@ components:
       work_dir: build
       vars:
         - "CONFIG_AOS_NODE_ID=\\\\\\\"%{AOS_DOM0_NODE_ID}\\\\\\\""
-        - "CONFIG_AOS_NODE_TYPE=\\\\\\\"%{AOS_DOM0_NODE_TYPE}\\\\\\\""
+        - "CONFIG_AOS_NODE_TYPE=\\\\\\\"%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-gen3-dom0\\\\\\\""
 
       shields:
         - "xen_dom0"
@@ -248,7 +268,14 @@ components:
         - [PREFERRED_VERSION_xen, "4.17.0+git%"]
         - [PREFERRED_VERSION_xen-tools, "4.17.0+git%"]
 
-      build_target: core-image-weston
+        # Requires to properly generate Aos FOTA
+        - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
+
+        # Aos configuration
+        - [AOS_NODE_ID, "%{AOS_DOMD_NODE_ID}"]
+        - [AOS_NODE_HOSTNAME, "%{AOS_DOMD_HOST_NAME}"]
+
+      build_target: "%{AOS_BASE_IMAGE}"
       layers:
         - "../poky/meta"
         - "../poky/meta-poky"
@@ -279,8 +306,9 @@ components:
         - "tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
         - "tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTB_NAME}"
         - "tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
-        - "tmp/deploy/images/%{MACHINE}/core-image-weston-%{MACHINE}.ext4"
-        - "tmp/work-shared/core-image-weston-%{MACHINE}/rootfs/var"
+        - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.ext4"
+        - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
+        - "tmp/work-shared/%{AOS_BASE_IMAGE}-%{MACHINE}/rootfs/var"
 
 images:
   full:
@@ -298,6 +326,7 @@ images:
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
           "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
           "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+          "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
       boot_b:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
@@ -310,6 +339,7 @@ images:
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
           "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
           "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+          "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
       boot_env:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
@@ -319,14 +349,14 @@ images:
       domd_rootfs:
         gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
         type: raw_image
-        image_path: "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/core-image-weston-%{MACHINE}.ext4"
+        image_path: "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.ext4"
 
       domd_var:
         gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
         type: ext4
         size: 1024 MiB
         items:
-          "/": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/work-shared/core-image-weston-%{MACHINE}/rootfs/var"
+          "/": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/work-shared/%{AOS_BASE_IMAGE}-%{MACHINE}/rootfs/var"
 
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
@@ -509,9 +539,32 @@ parameters:
       default: true
       overrides:
         variables:
-          VIS_DATA_PROVIDER: "renesassimulatoradapter"
+          AOS_VIS_DATA_PROVIDER: "renesassimulatoradapter"
 
     telemetryemulator:
       overrides:
         variables:
-          VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+          AOS_VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+
+  NODE_TYPE:
+    desc: "Node type to build"
+    "single":
+      default: true
+      overrides:
+        components:
+          domd:
+            builder:
+              conf:
+                - [AOS_SM_NODES, "%{AOS_DOM0_NODE_ID} %{AOS_DOMD_NODE_ID}"]
+                - [AOS_HOSTS, "127.0.0.1=wwwivi"]
+                - [AOS_VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
+
+    "secondary":
+      overrides:
+        variables:
+          UNIT_MODEL: "rcar-multinode-zephyr"
+          AOS_MAIN_NODE_ID: "gen4-domd"
+          AOS_MAIN_NODE_HOSTNAME: "domd.gen4"
+          AOS_DOM0_NODE_ID: "gen3-dom0"
+          AOS_DOMD_NODE_ID: "gen3-domd"
+          AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-gen3-"
