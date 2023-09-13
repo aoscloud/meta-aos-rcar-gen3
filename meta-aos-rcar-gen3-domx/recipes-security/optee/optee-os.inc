@@ -14,6 +14,8 @@ SRC_URI += " \
     file://0001-plat-rcar-do-not-enable-console-for-Gen4.patch \
 "
 
+NO_GENERIC_LICENSE[optee-os] = "${S}/LICENSE" 
+
 PV = "3.18.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
