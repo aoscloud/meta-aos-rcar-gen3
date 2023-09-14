@@ -65,3 +65,7 @@
 &sdhi2 {
 	status = "disabled";
 };
+
+&rcar_sound {
+	status = "disabled";
+};
