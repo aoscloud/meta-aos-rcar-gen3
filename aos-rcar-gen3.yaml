@@ -208,6 +208,7 @@ common_data:
 
 components:
   dom0:
+    default: true
     build-dir: "%{DOM0_BUILD_DIR}"
     sources:
       - type: west
@@ -233,6 +234,7 @@ components:
         - "build/zephyr/zephyr.bin"
 
   domd:
+    default: true
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
       - *COMMON_SOURCES
