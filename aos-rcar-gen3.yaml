@@ -36,7 +36,7 @@ variables:
 
   AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
-  AOS_BASE_IMAGE: "core-image-weston"
+  AOS_BASE_IMAGE: "aos-image-rcar"
 
 common_data:
   # Sources used by all yocto-based domains
