@@ -134,9 +134,6 @@ common_data:
     # remove x11 and vulkan to avoid error after removing mesa
     - [DISTRO_FEATURES:remove, " ptest x11 vulkan"]
 
-    # displbe and sndbe
-    - [DISTRO_FEATURES:append, " displbe sndbe"]
-
     # for Wayland/Weston
     - [DISTRO_FEATURES_NATIVESDK:append, " wayland"]
     - [DISTRO_FEATURES:append, " pam"]
