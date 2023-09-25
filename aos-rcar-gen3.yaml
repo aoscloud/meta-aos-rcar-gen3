@@ -267,6 +267,9 @@ components:
         - [PREFERRED_VERSION_xen, "4.17.0+git%"]
         - [PREFERRED_VERSION_xen-tools, "4.17.0+git%"]
 
+        # Add boot script
+        - [EXTRA_IMAGEDEPENDS:append, " boot-script"]
+
         # Requires to properly generate Aos FOTA
         - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
@@ -308,6 +311,7 @@ components:
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}.ext4"
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
         - "tmp/work-shared/%{AOS_BASE_IMAGE}-%{MACHINE}/rootfs/var"
+        - "tmp/deploy/images/%{MACHINE}/boot.uImage"
         # firmware
         - "tmp/deploy/images/%{MACHINE}/bl2-%{MACHINE}.bin"
         - "tmp/deploy/images/%{MACHINE}/bl2-%{MACHINE}.srec"
@@ -388,6 +392,7 @@ components:
         - "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/boot.uImage"
         - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
       components:
@@ -409,6 +414,7 @@ components:
               "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
               "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
               "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+              "boot.uImage": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/boot.uImage"
               "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
         rootfs-full:
@@ -450,6 +456,7 @@ images:
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
           "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
           "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+          "boot.uImage": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/boot.uImage"
           "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
       boot_b:
@@ -463,6 +470,7 @@ images:
           "zephyr.bin": "%{DOM0_BUILD_DIR}/build/zephyr/zephyr.bin"
           "linux-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
           "initramfs-domd": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos-image-initramfs-%{MACHINE}.cpio.gz"
+          "boot.uImage": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/boot.uImage"
           "aos/version": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/aos/boot/version"
 
       boot_env:
