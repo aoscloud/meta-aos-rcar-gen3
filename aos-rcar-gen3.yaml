@@ -121,6 +121,8 @@ common_data:
     - [PREFERRED_PROVIDER_virtual/mesa, ""]
     - [PREFERRED_PROVIDER_virtual/libgbm, "libgbm"]
     - [PREFERRED_PROVIDER_libgbm-dev, "libgbm"]
+    # refpolicy
+    - [PREFERRED_PROVIDER_virtual/refpolicy, "refpolicy-aos"]
 
     # Distro features
 
@@ -137,6 +139,9 @@ common_data:
     # for Wayland/Weston
     - [DISTRO_FEATURES_NATIVESDK:append, " wayland"]
     - [DISTRO_FEATURES:append, " pam"]
+
+    # Enable SELinux
+    - [DISTRO_FEATURES:append, " acl xattr pam selinux"]
 
     # Machine features
 
@@ -406,7 +411,7 @@ components:
           partition:
             gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
             type: ext4
-            size: 128 MiB
+            size: 256 MiB
             items:
               "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
               "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
@@ -448,7 +453,7 @@ images:
       boot_a:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
         type: ext4
-        size: 128 MiB
+        size: 256 MiB
         items:
           "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
@@ -462,7 +467,7 @@ images:
       boot_b:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
         type: ext4
-        size: 128 MiB
+        size: 256 MiB
         items:
           "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
