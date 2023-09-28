@@ -247,7 +247,7 @@ components:
         url: https://git.yoctoproject.org/meta-selinux
         rev: "kirkstone"
       - type: git
-        url: "https://github.com/xen-troops/meta-aos-rcar-gen3.git"
+        url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
         rev: "develop"
 
     builder:
