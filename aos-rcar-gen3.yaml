@@ -224,7 +224,7 @@ components:
       work_dir: build
       vars:
         - "CONFIG_AOS_NODE_ID=\\\\\\\"%{AOS_DOM0_NODE_ID}\\\\\\\""
-        - "CONFIG_AOS_NODE_TYPE=\\\\\\\"%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-gen3-dom0\\\\\\\""
+        - "CONFIG_AOS_NODE_TYPE=\\\\\\\"rcar-gen3-dom0\\\\\\\""
 
       shields:
         - "xen_dom0"
