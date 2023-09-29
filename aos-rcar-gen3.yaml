@@ -97,6 +97,9 @@ common_data:
     # Skip warning about missing "virtualization" distro feature
     - [SKIP_META_VIRT_SANITY_CHECK, "1"]
 
+    # Do not install kernel image to rootfs to decrease initrd size
+    - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
+
     # Add for gstreamer plugins ugly
     - [LICENSE_FLAGS_ACCEPTED, "commercial"]
 
