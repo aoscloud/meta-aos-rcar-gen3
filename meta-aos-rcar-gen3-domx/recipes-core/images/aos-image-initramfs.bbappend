@@ -1,4 +1,4 @@
-IMAGE_NAME = "initramfs-domd"
+IMAGE_NAME = "initramfs-${XT_DOM_NAME}"
 
 AOS_INITRAMFS_SCRIPTS += " \
     initramfs-module-lvm \
