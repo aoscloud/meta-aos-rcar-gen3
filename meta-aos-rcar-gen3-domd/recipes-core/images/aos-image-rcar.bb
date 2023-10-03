@@ -12,7 +12,7 @@ IMAGE_INSTALL:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'displbe', 'displbe', '', d)} \
 "
 
-# We add 500 MB of free space for media content.
-# Variable specifies space in KBytes.
-# Also see IMAGE_OVERHEAD_FACTOR as another way to increase free space.
-IMAGE_ROOTFS_EXTRA_SPACE = "512000"
+# Set fixed rootfs size
+IMAGE_ROOTFS_SIZE = "1048576"
+IMAGE_OVERHEAD_FACTOR = "1.0"
+IMAGE_ROOTFS_EXTRA_SPACE = "0"
