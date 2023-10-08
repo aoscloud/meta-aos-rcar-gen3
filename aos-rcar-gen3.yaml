@@ -436,7 +436,7 @@ components:
           fileName: "%{AOS_UM_COMPONENT_PREFIX}rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
         rootfs-incremental:
-          componentType: "%{AOS_UM_COMPONENT_PREFIX}rootfs"
+          componentType: "%{AOS_UM_COMPONENT_PREFIX}domd"
           enabled: false
           method: "overlay"
           yocto_dir: "%{YOCTOS_WORK_DIR}"
