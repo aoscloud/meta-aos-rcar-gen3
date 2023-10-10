@@ -99,6 +99,9 @@ common_data:
     # HACK: force ipk instead of rpm b/c it makes troubles to PVR UM build otherwise
     - [PACKAGE_CLASSES, "package_ipk"]
 
+    # Make logs persistent
+    - [VOLATILE_LOG_DIR, "no"]
+
     # BBMASK
 
     - [XT_USE_DDK1_11, "%{XT_USE_DDK1_11}"]
