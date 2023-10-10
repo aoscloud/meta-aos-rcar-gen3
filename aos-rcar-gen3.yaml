@@ -436,6 +436,8 @@ components:
           type: "full"
           description: "gen3-domd rootfs image"
           vendorVersion: "%{AOS_BUNDLE_IMAGE_VERSION}"
+          exclude:
+            - "var/*"
           fileName: "%{AOS_UM_COMPONENT_PREFIX}rootfs-full-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
         rootfs-incremental:
@@ -448,6 +450,8 @@ components:
           description: "gen3-domd rootfs image"
           vendorVersion: "%{AOS_BUNDLE_IMAGE_VERSION}"
           requiredVersion: "%{AOS_ROOTFS_REF_VERSION}"
+          exclude:
+            - "var/*"
           fileName: "%{AOS_UM_COMPONENT_PREFIX}rootfs-incremental-%{AOS_BUNDLE_IMAGE_VERSION}.squashfs"
 
 images:
