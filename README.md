@@ -1,185 +1,159 @@
 # meta-aos-rcar-gen3
 
-This repository contains Renesas RCAR Gen3-specific Yocto layers for
-Aos distro and `moulin` project file to build it. Layers in this
-repository provide final recipes to build meta-xt-prod-aos-rcar
-distro. This distro is the Aos product for Renesas boards.
+This repository contains Renesas R-Car Gen3-specific Yocto layers for AosEdge distro.
 
-Those layers *may* be added and used manually, but they were written
-with [Moulin](https://moulin.readthedocs.io/en/latest/) build system,
-as Moulin-based project files provide correct entries in local.conf
+## Status
 
-## Moulin project file
+This is a release 3.0.0 of AosEdge development product for the R-Car Gen3 boards. This release provides the following
+features:
 
-Work is still in progress, but right now the following features are tested and working:
+* Supported machines: `h3ulcb-4x2g`, `salvator-xs-m3-2x4g`
+* Dom0 with Zephyr OS to run unikernels as xen domains using xrun
+* DomD with Linux OS to run container based Aos services using crun
+* Generating FOTA bundles
+* Generating Aos layers
 
-* AosBox with Starter Kit Premiere 8GB board
-* 3 domains are being built: Linux based Dom0, DomD and DomF where DomF is main Aos domain
-* Networking in DomD and DomF
-* OP-TEE client in DomF
-* Virtualized OP-TEE build
-* ARM-TF that boots into EL2
-* SD or eMMC boot
-
-Features that are present but not tested:
-
-* Renesas Salvator-XS M3 with 8GB memory is supported
-* Renesas Salvator-X H3 with 8GB memory is supported
-* Renesas Starter Kit Premiere 8GB (H3ULCB)
-* Kingfisher with Starter Kit Premiere 8GB board
-* Renesas Salvator-XS M3 with 4GB memory
-* Renesas Salvator-XS H3 with 8GB memory
-* Renesas Starter Kit Premiere (H3ULCB)
-* Renesas Starter Kit Pro (M3ULCB)
-
-## Building
-
-### Requirements
+## Requirements
 
 1. Ubuntu 18.0+ or any other Linux distribution which is supported by Poky/OE
-2. Development packages for Yocto. Refer to [Yocto
-   manual](https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#brief-build-system-packages).
-3. You need `Moulin` installed in your PC. Recommended way is to
-   install it for your user only: `pip3 install --user
-   git+https://github.com/xen-troops/moulin`. Make sure that your
-   `PATH` environment variable includes `${HOME}/.local/bin`.
-4. Ninja build system: `sudo apt install ninja-build` on Ubuntu
+2. Development packages for Yocto. Refer to
+[Yocto manual](https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#brief-build-system-packages)
+3. You need `Moulin` installed in your PC. Recommended way is to install it for your user only:
 
-### Fetching
+    ```sh
+    pip3 install --user git+https://github.com/xen-troops/moulin`
+    ```
 
-You can fetch/clone this whole repository, but you actually need only
-one file from it: `aos-rcar-gen3.yaml`. During build `moulin` will
-fetch this repository again into `yocto/` directory. So, to avoid
-possible confusion, we recommend to download only `aos-rcar-gen3.yaml`:
+    Make sure that your `PATH` environment variable includes `${HOME}/.local/bin`
+4. Ninja build system on Ubuntu:
 
-```bash
-curl -O https://raw.githubusercontent.com/aoscloud/meta-aos-rcar-gen3/master/aos-rcar-gen3.yaml
+    ```sh
+    sudo apt install ninja-build
+    ```
+  
+5. Install Zephyr OS dependencies and SDK:
+[Getting Started Guide](https://docs.zephyrproject.org/latest/develop/getting_started/index.html#)
+
+## Create image
+
+### Fetch
+
+You can fetch/clone this whole repository, but you actually only need one file from it: `aos-rcar-gen3.yaml`. During the
+build `moulin` will fetch this repository again into `yocto/` directory. So, to reduce possible confuse, we recommend to
+download only `aos-rcar-gen3.yaml`:
+
+```sh
+curl -O https://raw.githubusercontent.com/aoscloud/meta-aos-rcar-gen3/main/aos-rcar-gen3s.yaml
 ```
 
-### Building
+### Build
 
-Moulin is used to generate Ninja build file: `moulin aos-rcar-gen3.yaml`.
-This project provides a number of additional options. You can use check them
-with `--help-config` command line option:
+Moulin is used to generate Ninja build file: `moulin aos-rcar-gen3.yaml`. This project provides number of additional
+parameters. You can check them with `--help-config` command line option:
 
-```bash
-moulin aos-rcar-gen3.yaml --help-config
-usage: /home/oleksandr_grytsov/.local/bin/moulin aos-rcar-gen3.yaml
-   [--MACHINE {h3ulcb-4x2g-ab,h3ulcb-4x2g,h3ulcb-4x2g-kf,m3ulcb,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,salvator-x-h3}]
-   [--VIS_DATA_PROVIDER {telemetryemulator,renesassimulator}]
+```sh
+moulin aos-rcar-gen3.yaml --help-config   
+usage: moulin aos-rcar-gen3.yaml [--MACHINE {salvator-xs-m3-2x4g,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,h3ulcb-4x2g,h3ulcb-4x2g-kf,h3ulcb-4x2g-ab}]
+                                 [--ENABLE_MM {no,yes}]
+                                 [--PREBUILT_DDK {no,yes}] [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}]
+                                 [--NODE_TYPE {single,secondary}]
 
 Config file description: Aos development setup for Renesas RCAR Gen3 hardware
 
-optional arguments:
-  --MACHINE {h3ulcb-4x2g-ab,h3ulcb-4x2g,h3ulcb-4x2g-kf,m3ulcb,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,salvator-x-h3}
+options:
+  --MACHINE {salvator-xs-m3-2x4g,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,h3ulcb-4x2g,h3ulcb-4x2g-kf,h3ulcb-4x2g-ab}
                         RCAR Gen3-based device
-  --VIS_DATA_PROVIDER {telemetryemulator,renesassimulator}
+  --ENABLE_MM {no,yes}  Enable Multimedia support
+  --PREBUILT_DDK {no,yes}
+                        Use pre-built GPU drivers
+  --VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}
                         Specifies plugin for VIS automotive data
+  --NODE_TYPE {single,secondary}
+                        Node type to build
+
 ```
 
-To build for AosBox use the following command line: `moulin aos-rcar-gen3.yaml`.
+Currently only the following machines are supported: `h3ulcb-4x2g`, `salvator-xs-m3-2x4g`.
+Two types of nodes can be built: `single` - where Gen3 board is single unit or `secondary` where Gen3 board is secondary
+node in multi-node unit.
 
-Moulin will generate `build.ninja` file. After that - run `ninja` to
-build the images. This will take some time and disk space, as it will
-built 3 separate Yocto images. Depending on internet speed, this will
-take 2-4 hours on Intel i7 with 32GB of RAM and 100 GB SSD.
+For example, to build the secondary node image for multi-node Aos unit, perform the following command:
 
-### Creating SD card image
-
-Image file can be created with `rouge` tool. This is a companion
-application for `moulin`.
-
-It can be invoked either as a standalone tool, or via Ninja.
-
-#### Creating image(s) via Ninja
-
-Newer versions of `moulin` (>= 0.5) will generate additional Ninja targets:
-
-* `image-full`
-
-Thus, you can just run `ninja image-full` or `ninja full.img` which
-will generate the `full.img` in your build directory.
-
-Then you can use `dd` to write this image to your SD card. Don't
-forget `conv=sparse` option for `dd` to speed up writing.
-
-#### Using `rouge` in standalone mode
-
-In this mode you can write image right to SD card. But it requires
-additional options.
-
-In standalone mode`rouge` accepts the same parameters like
-`--MACHINE` as `moulin` does.
-
-You can prepare image by running:
-
-```bash
-rouge aos-rcar-gen3.yaml -i full
+```sh
+moulin aos-rcar-gen3.yaml --NODE_TYPE secondary
 ```
 
-This will create file `full.img` in your current directory.
+Other options enable different image features. See
+[prod-devel-rcar](https://github.com/xen-troops/meta-xt-prod-devel-rcar/blob/master/README.md) for more details.
 
-Also you can write image directly to a SD card by running:
+Moulin will generate `build.ninja` file that contains different build targets. Run `ninja` command to build image
+components. This will take some time and disk space.
 
-```bash
-sudo rouge aos-rcar-gen3.yaml -i full -so /dev/sdX
+### Update firmware
+
+Aos image requires specific firmware version to work properly. Updating the firmware should be done for each new Aos
+release. Perform the following command in order to build firmware images:
+
+```sh
+ninja pack-ipl
 ```
 
-**BE SURE TO PROVIDE CORRECT DEVICE NAME**. `rouge` have no
-interactive prompts and will overwrite your device right away.
-**ALL DATA WILL BE LOST**.
+It will generate firmware archive under `output/ipl` folder. Please use
+[RCar flash tool](https://github.com/xen-troops/rcar_flash) to update the firmware.
 
-For more information about `rouge` check its
-[manual](https://moulin.readthedocs.io/en/latest/rouge.html).
+### Flash image
 
-## Aos FOTA update
+To generate Aos image, issue the following command:
 
-### Prerequisites
-
-* Proper board configuration file should be set for the target systemd on the Aos cloud. doc/boardconfig.json contains
-board configuration for `h3ulcb-4x2g-ab` board. For other boards, component ids should be changed according to the
-following scheme: `${AOS_BOARD_MODEL}-${AOS_BOARD_VERSION}-dom[0,d,f]`;
-* Updating Dom0 requires special u-boot environment variables to be set: see doc/u-boot-env.md;
-* Updating Dom0 works for eMMC only.
-
-### Generating Aos update image
-
-Aos update image generation is done by dom0 yocto. The Aos image requires
-moulin build is successfully done. It means, after doing any source changes,
-`ninja` build command should be issued before generating the Aos image.
-
-The following commands should be performed to generate the Aos image:
-
-```bash
-cd yocto/
-source poky/oe-init-build-env build-dom0/
-bitbake aos-update
+```sh
+ninja full.img
 ```
 
-It will generate Aos update image according to the Aos update variables set in
-`prod-aos-rcar.yaml` file. The default image location is your top build
-folder.
+It will generate `full.img` file in the current folder. In this product Aos image should be flashed on SD card only. The
+easiest way to flash SD card is to attach it to the host PC and flash it using `rouge` or `dd` utility.
 
-Aos update variables:
+Using `dd` to flash SD card:
 
-* `AOS_BUNDLE_IMAGE_VERSION` - specifies image version of all components included to
-the Aos update image. Individual component version can be assigned using
-`AOS_DOM0_IMAGE_VERSION` for Dom0, `AOS_DOMD_IMAGE_VERSION` for DomD, `AOS_DOMF_IMAGE_VERSION` for DomF;
-* `AOS_BUNDLE_OSTREE_REPO` - specifies path to ostree repo. ostree repo is required to generate incremental update.
-It is set to `${TOPDIR}/../../rootfs_repo` by default;
-* `AOS_BUNDLE_REF_VERSION` - used as default reference version for generating
-incremental component update. Individual component reference version can be
-specified using corresponding component variable: `AOS_DOMD_REF_VERSION` for DomD, `AOS_DOMF_REF_VERSION` for DomF;
-* `AOS_BUNDLE_DOM0_TYPE`, `AOS_BUNDLE_DOMD_TYPE`, `AOS_BUNDLE_DOMF_TYPE` - specifies component update type:
-  * `full` - full component update;
-  * `incremental` - incremental component update (supported only by DomD, DomF);
-  * if not set - the component update will not be included into the Aos update
-image.
+```sh
+dd if=full.img of=/dev/sdX conv=sparse
+```
 
-### Generating Aos update image example
+Using `rouge` to flash SD card:
 
-* perform required changes in the sources;
-* change the `AOS_BUNDLE_IMAGE_VERSION`;
-* set components build type if required (`AOS_BUNDLE_DOM0_TYPE`, `AOS_BUNDLE_DOMD_TYPE`, `AOS_BUNDLE_DOMF_TYPE`);
-* perform moulin build by issuing `ninja` build command;
-* generate Aos image update as described above.
+```sh
+rouge aos-rcar-gen3.yaml -i full -so /dev/sdX
+```
+
+**BE SURE TO PROVIDE CORRECT DEVICE NAME**. `rouge` has no interactive prompts and will overwrite your device right
+away. **ALL DATA WILL BE LOST**.
+
+Alternatively, SD card can be flashed using BSP build or
+[prod-devel-rcar](https://github.com/xen-troops/meta-xt-prod-devel-rcar/blob/master/README.md) launched over TFTP+NFS.
+Once, the board is started, put `full.img` into NFS folder and copy the image into SD card, using the following command
+on Gen3 board:
+
+```sh
+dd if=/gen3.img of=/dev/mmcblk1 bs=32M status=progress oflag=direct
+```
+
+### U-Boot environment
+
+The following U-Boot variable should be set for Aos image:
+
+```sh
+setenv aos_device 'mmc 0'
+setenv aos_boot_device 'mmcblk1'
+setenv aos_default_vars 'setenv aos_boot_main 0; setenv aos_boot1_ok 1; setenv aos_boot2_ok 1; setenv aos_boot_part 0'
+setenv aos_load_vars 'run aos_default_vars; if load ${aos_device}:3 ${loadaddr} uboot.env; then env import -t ${loadaddr} ${filesize}; fi'
+setenv aos_save_vars 'env export -t ${loadaddr} aos_boot_main aos_boot_part aos_boot1_ok aos_boot2_ok; fatwrite ${aos_device}:3 ${loadaddr} uboot.env 0x3E'
+setenv aos_boot1 'if test ${aos_boot1_ok} -eq 1; then setenv aos_boot1_ok 0; setenv aos_boot2_ok 1; setenv aos_boot_part 0; setenv aos_boot_slot 1; echo "==== Boot from part 1"; run aos_save_vars; run aos_boot_cmd; fi'
+setenv aos_boot2 'if test ${aos_boot2_ok} -eq 1; then setenv aos_boot2_ok 0; setenv aos_boot1_ok 1; setenv aos_boot_part 1; setenv aos_boot_slot 2; echo "==== Boot from part 2"; run aos_save_vars; run aos_boot_cmd; fi'
+setenv aos_boot_cmd 'ext2load ${aos_device}:${aos_boot_slot} 0x83000000 boot.uImage; source 0x83000000'
+setenv bootcmd_aos 'run aos_load_vars; if test ${aos_boot_main} -eq 0; then run aos_boot1; run aos_boot2; else run aos_boot2; run aos_boot1; fi'
+setenv bootcmd 'run bootcmd_aos'
+```
+
+## FOTA & Layers
+
+* [Generate FOTA bundles](https://github.com/aoscloud/meta-aos-vm/doc/fota.md)
+* [Generate layers](https://github.com/aoscloud/meta-aos-vm/doc/layers.md)
