@@ -43,7 +43,7 @@ build `moulin` will fetch this repository again into `yocto/` directory. So, to 
 download only `aos-rcar-gen3.yaml`:
 
 ```sh
-curl -O https://raw.githubusercontent.com/aoscloud/meta-aos-rcar-gen3/main/aos-rcar-gen3s.yaml
+curl -O https://raw.githubusercontent.com/aoscloud/meta-aos-rcar-gen3/main/aos-rcar-gen3.yaml
 ```
 
 ### Build
@@ -155,5 +155,5 @@ setenv bootcmd 'run bootcmd_aos'
 
 ## FOTA & Layers
 
-* [Generate FOTA bundles](https://github.com/aoscloud/meta-aos-vm/doc/fota.md)
-* [Generate layers](https://github.com/aoscloud/meta-aos-vm/doc/layers.md)
+* [Generate FOTA bundles](https://github.com/aoscloud/meta-aos-vm/blob/main/doc/fota.md)
+* [Generate layers](https://github.com/aoscloud/meta-aos-vm/blob/main/doc/layers.md)
