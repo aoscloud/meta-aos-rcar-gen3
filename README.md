@@ -133,7 +133,7 @@ Once, the board is started, put `full.img` into NFS folder and copy the image in
 on Gen3 board:
 
 ```sh
-dd if=/gen3.img of=/dev/mmcblk1 bs=32M status=progress oflag=direct
+dd if=/full.img of=/dev/mmcblk1 bs=32M status=progress oflag=direct
 ```
 
 ### U-Boot environment
