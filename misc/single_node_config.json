@@ -1,0 +1,11 @@
+{
+    "components": [
+        {
+            "id": "rcar-gen3-1.0-h3ulcb-boot"
+        },
+        {
+            "id": "rcar-gen3-1.0-h3ulcb-domd"
+        }
+    ],
+    "formatVersion": 1
+}

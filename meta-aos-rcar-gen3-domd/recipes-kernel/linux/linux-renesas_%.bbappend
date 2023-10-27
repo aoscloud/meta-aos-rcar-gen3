@@ -1,6 +1,5 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI_append = " \
-    file://defconfig \
-    file://xen-chosen.dtsi;subdir=git/arch/${ARCH}/boot/dts/renesas \
+SRC_URI += " \
+    file://aos.cfg \
 "

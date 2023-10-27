@@ -3,7 +3,7 @@ Description=AOS Reboot service
 ConditionPathExists=/var/aos/workdirs/um/update_rootfs/updated
 
 [Service]
-ExecStart=/usr/bin/xenstore-write control/user-reboot 2
+ExecStart=systemctl reboot --force
 
 [Install]
 WantedBy=multi-user.target

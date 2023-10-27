@@ -1,0 +1,40 @@
+From 826dc9bb796763effba47fe934f41813949007cf Mon Sep 17 00:00:00 2001
+From: Dmytro Firsov <dmytro_firsov@epam.com>
+Date: Wed, 13 Sep 2023 18:25:11 +0300
+Subject: [PATCH] clk: remove MMC clocks for H3 CPG list in Domain-D build
+
+Now MMC device lefts in Domain-0, so we need to prevent it from
+being disabled during DomD boot.
+
+Signed-off-by: Dmytro Firsov <dmytro_firsov@epam.com>
+---
+ drivers/clk/renesas/r8a7795-cpg-mssr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+index b920de368670..559b0ad39d21 100644
+--- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+@@ -107,7 +107,9 @@ static struct cpg_core_clk r8a7795_core_clks[] __initdata = {
+ 
+ 	DEF_GEN3_SD("sd0",      R8A7795_CLK_SD0,   CLK_SDSRC,     0x074),
+ 	DEF_GEN3_SD("sd1",      R8A7795_CLK_SD1,   CLK_SDSRC,     0x078),
++#ifndef CONFIG_XEN
+ 	DEF_GEN3_SD("sd2",      R8A7795_CLK_SD2,   CLK_SDSRC,     0x268),
++#endif
+ 	DEF_GEN3_SD("sd3",      R8A7795_CLK_SD3,   CLK_SDSRC,     0x26c),
+ 
+ 	DEF_FIXED("cl",         R8A7795_CLK_CL,    CLK_PLL1_DIV2, 48, 1),
+@@ -157,7 +159,9 @@ static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
+ 	DEF_MOD("tpu0",			 304,	R8A7795_CLK_S3D4),
+ 	/*DEF_MOD("scif2",		 310,	R8A7795_CLK_S3D4),*/
+ 	DEF_MOD("sdif3",		 311,	R8A7795_CLK_SD3),
++#ifndef CONFIG_XEN
+ 	DEF_MOD("sdif2",		 312,	R8A7795_CLK_SD2),
++#endif
+ 	DEF_MOD("sdif1",		 313,	R8A7795_CLK_SD1),
+ 	DEF_MOD("sdif0",		 314,	R8A7795_CLK_SD0),
+ 	DEF_MOD("pcie1",		 318,	R8A7795_CLK_S3D1),
+-- 
+2.34.1
+
