@@ -31,39 +31,39 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "kirkstone"
+      rev: "59077aa77b"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "kirkstone"
+      rev: "79a6f60da"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "kirkstone"
+      rev: "2d8b3cba"
 
     - type: git
       url: https://git.yoctoproject.org/meta-selinux
-      rev: "kirkstone"
+      rev: "a401f4b"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos.git"
-      rev: "develop"
+      rev: "v7.2.1"
 
     - type: git
       url: https://github.com/renesas-rcar/meta-renesas.git
-      rev: "kirkstone-dev"
+      rev: "f669cd36"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "master"
+      rev: "0634a8b"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: "master"
+      rev: "27a667e"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: "develop"
+      rev: "v3.0.0"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -200,11 +200,11 @@ common_data:
     sources:
       - type: git
         url: "https://git.openembedded.org/meta-python2"
-        rev: "kirkstone"
+        rev: "f02882e"
 
       - type: git
         url: "https://github.com/kraj/meta-clang.git"
-        rev: "kirkstone"
+        rev: "2d08d6b"
 
       - type: git
         url: "ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary"
@@ -228,7 +228,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aoscloud/aos_core_zephyr.git"
-        rev: "develop"
+        rev: "v0.2.1"
 
     builder:
       type: zephyr
@@ -583,7 +583,7 @@ parameters:
             sources:
               - type: git
                 url: "https://github.com/xen-troops/meta-rcar.git"
-                rev: "xt-master"
+                rev: "f669cd36"
 
             builder:
               layers:
