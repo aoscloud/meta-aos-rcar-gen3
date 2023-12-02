@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = " \
     dnsmasq \
     block \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ivi-shell', 'displaymanager', '', d)} \
+    u-boot-domd \
 "
 
 IMAGE_INSTALL:append = " \
