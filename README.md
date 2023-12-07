@@ -2,17 +2,6 @@
 
 This repository contains Renesas R-Car Gen3-specific Yocto layers for AosEdge distro.
 
-## Status
-
-This is a release 3.0.0 of AosEdge development product for the R-Car Gen3 boards. This release provides the following
-features:
-
-* Supported machines: `h3ulcb-4x2g`, `salvator-xs-m3-2x4g`
-* Dom0 with Zephyr OS to run unikernels as xen domains using xrun
-* DomD with Linux OS to run container based Aos services using crun
-* Generating FOTA bundles
-* Generating Aos layers
-
 ## Requirements
 
 1. Ubuntu 18.0+ or any other Linux distribution which is supported by Poky/OE
