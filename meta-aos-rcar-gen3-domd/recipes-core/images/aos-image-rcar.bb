@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = " \
     dnsmasq \
     block \
     ${@bb.utils.contains('DISTRO_FEATURES', 'ivi-shell', 'displaymanager', '', d)} \
+    u-boot-domd \
 "
 
 IMAGE_INSTALL:append = " \
@@ -27,6 +28,6 @@ IMAGE_INSTALL:append = " \
 "
 
 # Set fixed rootfs size
-IMAGE_ROOTFS_SIZE = "1048576"
-IMAGE_OVERHEAD_FACTOR = "1.0"
-IMAGE_ROOTFS_EXTRA_SPACE = "0"
+IMAGE_ROOTFS_SIZE ?= "1048576"
+IMAGE_OVERHEAD_FACTOR ?= "1.0"
+IMAGE_ROOTFS_EXTRA_SPACE ?= "524288"

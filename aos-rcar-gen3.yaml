@@ -1,5 +1,5 @@
 desc: "Aos development setup for Renesas RCAR Gen3 hardware"
-min_ver: "0.20"
+min_ver: "0.21"
 
 variables:
   # Build dirs
@@ -21,8 +21,20 @@ variables:
 
   # Aos config
 
-  AOS_BUNDLE_IMAGE_VERSION: "3.0.0"
-  AOS_ROOTFS_REF_VERSION: "2.0.0"
+  AOS_UNIT_MODEL: "rcar-multinode-zephyr"
+  AOS_UNIT_VERSION: "1.0"
+
+  AOS_MAIN_NODE_ID: "main-domd"
+
+  AOS_DOM0_NODE_ID: "main-dom0"
+  AOS_DOM0_NODE_TYPE: "rcar-main-dom0"
+
+  AOS_DOMD_NODE_ID: "main-domd"
+  AOS_DOMD_NODE_TYPE: "rcar-main-domd"
+
+  AOS_BUNDLE_IMAGE_VERSION: "3.1.0-beta.1"
+  AOS_ROOTFS_REF_VERSION: "3.0.0"
+  AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
   AOS_BASE_IMAGE: "aos-image-rcar"
 
@@ -31,39 +43,39 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "59077aa77b"
+      rev: "kirkstone"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "79a6f60da"
+      rev: "kirkstone"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "2d8b3cba"
+      rev: "kirkstone"
 
     - type: git
-      url: https://git.yoctoproject.org/meta-selinux
-      rev: "a401f4b"
+      url: "https://git.yoctoproject.org/meta-selinux"
+      rev: "kirkstone"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos.git"
-      rev: "v7.2.1"
+      rev: "develop"
 
     - type: git
-      url: https://github.com/renesas-rcar/meta-renesas.git
-      rev: "f669cd36"
+      url: "https://github.com/renesas-rcar/meta-renesas.git"
+      rev: "kirkstone-dev"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "0634a8b"
+      rev: "master"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: "27a667e"
+      rev: "master"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: "v3.0.0"
+      rev: "develop"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -187,7 +199,6 @@ common_data:
     - [AOS_UNIT_MODEL, "%{AOS_UNIT_MODEL}"]
     - [AOS_UNIT_VERSION, "%{AOS_UNIT_VERSION}"]
     - [AOS_MAIN_NODE_ID, "%{AOS_MAIN_NODE_ID}"]
-    - [AOS_MAIN_NODE_HOSTNAME, "%{AOS_MAIN_NODE_HOSTNAME}"]
     - [AOS_UM_COMPONENT_PREFIX, "%{AOS_UM_COMPONENT_PREFIX}"]
 
     # Image versions
@@ -200,11 +211,11 @@ common_data:
     sources:
       - type: git
         url: "https://git.openembedded.org/meta-python2"
-        rev: "f02882e"
+        rev: "kirkstone"
 
       - type: git
         url: "https://github.com/kraj/meta-clang.git"
-        rev: "2d08d6b"
+        rev: "kirkstone"
 
       - type: git
         url: "ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary"
@@ -228,7 +239,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aoscloud/aos_core_zephyr.git"
-        rev: "v0.2.1"
+        rev: "develop"
 
     builder:
       type: zephyr
@@ -236,14 +247,17 @@ components:
       target: aos_core_zephyr
       work_dir: build
       vars:
-        - "CONFIG_AOS_NODE_ID=\\\\\\\"gen3-dom0\\\\\\\""
-        - "CONFIG_AOS_NODE_TYPE=\\\\\\\"rcar-gen3-dom0\\\\\\\""
+        - 'CONFIG_AOS_NODE_ID="%{AOS_DOM0_NODE_ID}"'
+        - 'CONFIG_AOS_NODE_TYPE="%{AOS_DOM0_NODE_TYPE}"'
+        - 'CONFIG_DOMD_UBOOT_PATH="../../../%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"'
+        - 'CONFIG_DOMD_DTB_PATH="../../../%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"'
 
       shields:
         - "xen_dom0"
 
       additional_deps:
-        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/Image-%{MACHINE}.bin"
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"
+        - "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
 
       target_images:
         - "build/zephyr/zephyr.bin"
@@ -283,9 +297,8 @@ components:
         - [IMAGE_BASENAME, "%{AOS_BASE_IMAGE}"]
 
         # Aos configuration
-        - [AOS_NODE_ID, "gen3-domd"]
-        - [AOS_NODE_TYPE, "rcar-gen3-domd"]
-        - [AOS_NODE_HOSTNAME, "domd.gen3"]
+        - [AOS_NODE_ID, "%{AOS_DOMD_NODE_ID}"]
+        - [AOS_NODE_TYPE, "%{AOS_DOMD_NODE_TYPE}"]
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
@@ -322,6 +335,8 @@ components:
         - "tmp/deploy/images/%{MACHINE}/%{AOS_BASE_IMAGE}-%{MACHINE}-var.ext4"
         - "tmp/deploy/images/%{MACHINE}/aos/boot/version"
         - "tmp/deploy/images/%{MACHINE}/boot.uImage"
+        - "tmp/deploy/images/%{MACHINE}/u-boot-domd.bin"
+        - "tmp/deploy/images/%{MACHINE}/%{XT_DOMD_DTB_NAME}"
         # firmware
         - "tmp/deploy/images/%{MACHINE}/bl2-%{MACHINE}.bin"
         - "tmp/deploy/images/%{MACHINE}/bl2-%{MACHINE}.srec"
@@ -381,8 +396,10 @@ components:
         items:
           nodejs-layer:
             target: "aos-nodejs-layer"
+
           pylibs-layer:
             target: "aos-pylibs-layer"
+
           libvis-layer:
             target: "aos-libvis-layer"
 
@@ -505,7 +522,7 @@ images:
       domd_aos:
         gpt_type: CA7D7CCB-63ED-4C53-861C-1742536059CC # LUKS partition
         type: empty
-        size: 2048 MiB
+        size: 4096 MiB
 
 parameters:
   # Machines
@@ -583,7 +600,7 @@ parameters:
             sources:
               - type: git
                 url: "https://github.com/xen-troops/meta-rcar.git"
-                rev: "f669cd36"
+                rev: "xt-master"
 
             builder:
               layers:
@@ -697,30 +714,19 @@ parameters:
       overrides:
         variables:
           AOS_UNIT_MODEL: "rcar-gen3"
-          AOS_UNIT_VERSION: "1.0"
-          AOS_MAIN_NODE_ID: "gen3-domd"
-          AOS_MAIN_NODE_HOSTNAME: "domd.gen3"
-          AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
         components:
           domd:
             builder:
               conf:
-                - [AOS_SM_NODES, "gen3-domd gen3-dom0"]
+                - [AOS_SM_NODES, "main-domd main-dom0"]
                 - [AOS_HOSTS, "127.0.0.1=wwwivi"]
                 - [AOS_VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
 
     "secondary":
       overrides:
         variables:
-          AOS_UNIT_MODEL: "rcar-multinode-zephyr"
-          AOS_UNIT_VERSION: "1.0"
-          AOS_MAIN_NODE_ID: "gen4-domd"
-          AOS_MAIN_NODE_HOSTNAME: "domd.gen4"
-          AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-gen3-"
-
-        components:
-          domd:
-            builder:
-              conf:
-                - [AOS_HOSTS, "10.0.0.2=domd"]
+          AOS_DOM0_NODE_ID: "secondary-dom0"
+          AOS_DOM0_NODE_TYPE: "rcar-secondary-dom0"
+          AOS_DOMD_NODE_ID: "secondary-domd"
+          AOS_DOMD_NODE_TYPE: "rcar-secondary-domd"
