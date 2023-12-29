@@ -32,7 +32,7 @@ variables:
   AOS_DOMD_NODE_ID: "main-domd"
   AOS_DOMD_NODE_TYPE: "rcar-main-domd"
 
-  AOS_BUNDLE_IMAGE_VERSION: "3.1.0-beta.1"
+  AOS_BUNDLE_IMAGE_VERSION: "3.0.1"
   AOS_ROOTFS_REF_VERSION: "3.0.0"
   AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
@@ -43,39 +43,39 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "kirkstone"
+      rev: "755632c2fcab43aa05cdcfa529727064b045073c"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "kirkstone"
+      rev: "402affcc073db39f782c1ebfd718edd5f11eed4c"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "kirkstone"
+      rev: "88327090d26955a678c6f8bd2585aad4d802f6c4"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "kirkstone"
+      rev: "a401f4b2816a0b41ce8d9351542658c721935bcd"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos.git"
-      rev: "develop"
+      rev: "v7.2.2"
 
     - type: git
       url: "https://github.com/renesas-rcar/meta-renesas.git"
-      rev: "kirkstone-dev"
+      rev: "7f12dca9a7fd1797bea67c1fb8d3a9c74c4a49d8"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "master"
+      rev: "8a96d9bebd39b9289fa12fff427276b97eaf8a18"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: "master"
+      rev: "27a667eb8bc426e504e016f33204af48b614b24f"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: "develop"
+      rev: "v3.0.1"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -211,11 +211,11 @@ common_data:
     sources:
       - type: git
         url: "https://git.openembedded.org/meta-python2"
-        rev: "kirkstone"
+        rev: "f02882e2aa9279ca7becca8d0cedbffe88b5a253"
 
       - type: git
         url: "https://github.com/kraj/meta-clang.git"
-        rev: "kirkstone"
+        rev: "1602c0ad2a0dc011a3fac94b178a5b9935d78b80"
 
       - type: git
         url: "ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary"
@@ -239,7 +239,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aoscloud/aos_core_zephyr.git"
-        rev: "develop"
+        rev: "v0.2.2"
 
     builder:
       type: zephyr
@@ -600,7 +600,7 @@ parameters:
             sources:
               - type: git
                 url: "https://github.com/xen-troops/meta-rcar.git"
-                rev: "xt-master"
+                rev: "82cf69160ff894721a696644ffe4f21926a74e83"
 
             builder:
               layers:
