@@ -132,6 +132,13 @@ on Gen3 board:
 dd if=/full.img of=/dev/mmcblk1 bs=32M status=progress oflag=direct
 ```
 
+If the board was provisioned before it is required to clean the zephyr storage in order to perform provisioning
+procedure again:
+
+```sh
+dd if=/dev/zero of=/dev/mmcblk0 bs=32M count=1
+```
+
 ### U-Boot environment
 
 The following U-Boot variable should be set for Aos image:
