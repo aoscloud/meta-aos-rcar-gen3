@@ -1,5 +1,5 @@
 desc: "Aos development setup for Renesas RCAR Gen3 hardware"
-min_ver: "0.21"
+min_ver: "0.22"
 
 variables:
   # Build dirs
@@ -305,9 +305,6 @@ components:
 
       build_target: "%{AOS_BASE_IMAGE}"
       layers:
-        - "../poky/meta"
-        - "../poky/meta-poky"
-        - "../poky/meta-yocto-bsp"
         - "../meta-renesas/meta-rcar-gen3"
         - "../meta-virtualization"
         - "../meta-selinux"
