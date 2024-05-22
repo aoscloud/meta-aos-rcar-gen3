@@ -205,32 +205,64 @@ common_data:
     - [AOS_ROOTFS_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
     - [AOS_BOOT_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
 
-  # The same set of layers and configs is used both in DomD and DomU
-  # to build a DDK from source code
-  ddk_source_overrides: &DDK_SOURCE_OVERRIDES
-    sources:
-      - type: git
-        url: "https://git.openembedded.org/meta-python2"
-        rev: "f02882e2aa9279ca7becca8d0cedbffe88b5a253"
+  gfx_conf: &GFX_CONF # Configure number of supported GPU virtual guests
+    - [XT_PVR_NUM_OSID, "%{XT_PVR_NUM_OSID}"]
 
-      - type: git
-        url: "https://github.com/kraj/meta-clang.git"
-        rev: "1602c0ad2a0dc011a3fac94b178a5b9935d78b80"
+    # for Wayland/Weston
+    - [DISTRO_FEATURES_NATIVESDK:append, " wayland"]
+    - [DISTRO_FEATURES:append, " pam"]
 
-      - type: git
-        url: "ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary"
-        rev: "6ed789681c2867c7cae8b0150e093e1e2781797e"
-        dir: "proprietary"
+    # Enable Gfx Pkgs
+    - [MACHINE_FEATURES:append, " gsx"]
+    - [
+        BB_MULTI_PROVIDER_ALLOWED:append,
+        " virtual/libgl virtual/egl virtual/libgles1 virtual/libgles2",
+      ]
+    - [PREFERRED_PROVIDER_virtual/libgles1, ""]
+    - [PREFERRED_PROVIDER_virtual/libgles2, "gles-user-module"]
+    - [PREFERRED_PROVIDER_virtual/libgles3, "gles-user-module"]
+    - [PREFERRED_PROVIDER_virtual/egl, "libegl"]
+    - [PREFERRED_PROVIDER_virtual/libgl, ""]
+    - [PREFERRED_PROVIDER_virtual/mesa, ""]
+    - [PREFERRED_PROVIDER_virtual/libgbm, "libgbm"]
+    - [PREFERRED_PROVIDER_libgbm-dev, "libgbm"]
+    - [BBMASK:append, " mesa-gl"]
 
-    builder:
-      conf:
-        # gles-um-compile.bb still requires python2
-        - [I_SWEAR_TO_MIGRATE_TO_PYTHON3, "yes"]
+    - [XT_USE_DDK1_11, "%{XT_USE_DDK1_11}"]
 
-      layers:
-        - "../meta-python2"
-        - "../meta-clang"
-        - "../meta-xt-rcar/meta-xt-rcar-proprietary"
+    # The bbappends below are only used for old DDK v1.11
+    - [
+        BBMASK:append,
+        " ${@bb.utils.contains('XT_USE_DDK1_11', '1', '', 'meta-xt-rcar-fixups/recipes-kernel/kernel-module-gles/kernel-module-gles.bbappend', d)}",
+      ]
+    - [
+        BBMASK:append,
+        " ${@bb.utils.contains('XT_USE_DDK1_11', '1', '', 'meta-xt-rcar-fixups/recipes-graphics/gles-module/gles-user-module.bbappend', d)}",
+      ]
+    - [
+        BBMASK:append,
+        " ${@bb.utils.contains('XT_USE_DDK1_11', '1', '', 'meta-xt-rcar-fixups/recipes-graphics/packagegroups/packagegroup-graphic-renesas.bbappend', d)}",
+      ]
+
+  gfx_sources: &GFX_SOURCES
+    - type: git
+      url: https://git.openembedded.org/meta-python2
+      rev: kirkstone
+
+    - type: git
+      url: https://github.com/kraj/meta-clang
+      rev: kirkstone
+
+    - type: git
+      url: ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary
+      rev: "6ed789681c2867c7cae8b0150e093e1e2781797e"
+      dir: "proprietary"
+
+  gfx_layers: &GFX_LAYERS
+    - "../meta-python2"
+    - "../meta-clang"
+    - "../meta-xt-rcar/meta-xt-rcar-proprietary"
+    - "../meta-xt-rcar/meta-xt-rcar-gles_common"
 
 components:
   dom0:
@@ -319,8 +351,6 @@ components:
         - "../meta-xt-rcar/meta-oe-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
-        - "../meta-xt-rcar/meta-xt-rcar-domx"
-        - "../meta-xt-rcar/meta-xt-rcar-gles_common"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domx"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-driver-domain"
         - "../meta-aos-rcar-gen3/meta-aos-rcar-gen3-domd"
@@ -361,14 +391,14 @@ components:
       base_dir: "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}"
       name: "output/ipl/ipl-%{MACHINE}.tar.bz2"
       items:
-        - "bl2-%{MACHINE}.bin"
-        - "bl2-%{MACHINE}.srec"
-        - "bl31-%{MACHINE}.bin"
-        - "bl31-%{MACHINE}.srec"
-        - "bootparam_sa0.bin"
-        - "bootparam_sa0.srec"
-        - "cert_header_sa6.bin"
-        - "cert_header_sa6.srec"
+        - "bl2-%{MACHINE}-4x2g.bin"
+        - "bl2-%{MACHINE}-4x2g.srec"
+        - "bl31-%{MACHINE}-4x2g.bin"
+        - "bl31-%{MACHINE}-4x2g.srec"
+        - "bootparam_sa0-4x2g.bin"
+        - "bootparam_sa0-4x2g.srec"
+        - "cert_header_sa6-4x2g.bin"
+        - "cert_header_sa6-4x2g.srec"
         - "cert_header_sa6_emmc.bin"
         - "cert_header_sa6_emmc.srec"
         - "tee-%{MACHINE}.bin"
@@ -673,26 +703,46 @@ parameters:
                   ]
                 - ["HOSTTOOLS:append", " unzip "]
 
-  PREBUILT_DDK:
-    desc: "Use pre-built GPU drivers"
-    "no":
-      default: true
-      overrides:
-        components:
-          domd: *DDK_SOURCE_OVERRIDES
-
-    "yes":
-      # Folder with prebuilt graphics package, i.e. file ${SOC_NAME}_linux_gsx_binaries_gles.tar.gz
-      # is provided as XT_PREBUILT_GSX_DIR variable to components
+  GRAPHICS:
+    desc: "Select how to use the GFX (3D hardware accelerator)"
+    "binaries":
       overrides:
         variables:
+          # for the linux
+          # Directory containing ${SOC_NAME}_linux_gsx_binaries_gles.tar.gz
           XT_PREBUILT_GSX_DIR: "${TOPDIR}/../../../prebuilt_gsx"
+          # for the android
+          XT_DOMA_DDK_KM_PREBUILT_MODULE: "eva/pvr-km/pvrsrvkm.ko"
+          XT_DOMA_KERNEL_EXTRA_MODULES: ""
+          XT_DOMA_SOURCE_GROUP: "default"
 
         components:
           domd:
             builder:
               conf:
+                - *GFX_CONF
                 - [XT_PREBUILT_GSX_DIR, "%{XT_PREBUILT_GSX_DIR}"]
+
+              layers:
+                - "../meta-xt-rcar/meta-xt-rcar-gles_common"
+
+    "sources":
+      default: true
+      overrides:
+        # for the linux
+        components:
+          domd:
+            sources:
+              - *GFX_SOURCES
+
+            builder:
+              conf:
+                - *GFX_CONF
+                # gfx sources still require python2
+                - [I_SWEAR_TO_MIGRATE_TO_PYTHON3, "yes"]
+
+              layers:
+                - *GFX_LAYERS
 
   # Aos VIS data provider
   VIS_DATA_PROVIDER:
