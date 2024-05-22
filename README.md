@@ -48,11 +48,11 @@ Moulin is used to generate Ninja build file: `moulin aos-rcar-gen3.yaml`. This p
 parameters. You can check them with `--help-config` command line option:
 
 ```sh
-moulin aos-rcar-gen3.yaml --help-config   
-usage: moulin aos-rcar-gen3.yaml [--MACHINE {salvator-xs-m3-2x4g,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,h3ulcb-4x2g,h3ulcb-4x2g-kf,h3ulcb-4x2g-ab}]
-                                 [--ENABLE_MM {no,yes}]
-                                 [--PREBUILT_DDK {no,yes}] [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}]
-                                 [--NODE_TYPE {single,secondary}]
+moulin aos-rcar-gen3.yaml --help-config 
+usage: moulin aos-rcar-gen3.yaml
+    [--MACHINE {salvator-xs-m3-2x4g,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,h3ulcb-4x2g,h3ulcb-4x2g-kf,h3ulcb-4x2g-ab}]
+    [--ENABLE_MM {no,yes}] [--GRAPHICS {binaries,sources}]
+    [--VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}] [--NODE_TYPE {single,secondary}]
 
 Config file description: Aos development setup for Renesas RCAR Gen3 hardware
 
@@ -60,13 +60,12 @@ options:
   --MACHINE {salvator-xs-m3-2x4g,salvator-xs-h3-4x2g,salvator-x-h3-4x2g,h3ulcb-4x2g,h3ulcb-4x2g-kf,h3ulcb-4x2g-ab}
                         RCAR Gen3-based device
   --ENABLE_MM {no,yes}  Enable Multimedia support
-  --PREBUILT_DDK {no,yes}
-                        Use pre-built GPU drivers
+  --GRAPHICS {binaries,sources}
+                        Select how to use the GFX (3D hardware accelerator)
   --VIS_DATA_PROVIDER {renesassimulator,telemetryemulator}
                         Specifies plugin for VIS automotive data
   --NODE_TYPE {single,secondary}
                         Node type to build
-
 ```
 
 Currently only the following machines are supported: `h3ulcb-4x2g`, `salvator-xs-m3-2x4g`.
