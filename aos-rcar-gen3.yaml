@@ -32,8 +32,8 @@ variables:
   AOS_DOMD_NODE_ID: "main-domd"
   AOS_DOMD_NODE_TYPE: "rcar-main-domd"
 
-  AOS_BUNDLE_IMAGE_VERSION: "3.1.0"
-  AOS_ROOTFS_REF_VERSION: "3.0.1"
+  AOS_BUNDLE_IMAGE_VERSION: "3.2.0"
+  AOS_ROOTFS_REF_VERSION: "3.1.0"
   AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
   AOS_BASE_IMAGE: "aos-image-rcar"
@@ -43,39 +43,39 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "0b39955d14600257a6eafc211fd68a933c69a0e9"
+      rev: "kirkstone"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "8609de00952d65bb813a48c535c937324efeb18a"
+      rev: "kirkstone"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "88327090d26955a678c6f8bd2585aad4d802f6c4"
+      rev: "kirkstone"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "a401f4b2816a0b41ce8d9351542658c721935bcd"
+      rev: "kirkstone"
 
     - type: git
-      url: "https://github.com/aoscloud/meta-aos.git"
-      rev: "v7.2.3"
+      url: "https://github.com/aoscloud/meta-aos"
+      rev: "develop"
 
     - type: git
-      url: "https://github.com/renesas-rcar/meta-renesas.git"
-      rev: "7f12dca9a7fd1797bea67c1fb8d3a9c74c4a49d8"
+      url: "https://github.com/renesas-rcar/meta-renesas"
+      rev: "kirkstone-dev"
 
     - type: git
-      url: "https://github.com/xen-troops/meta-xt-common.git"
-      rev: "fa83e43b45ac5c11f2b189915e32ea8e77503f16"
+      url: "https://github.com/xen-troops/meta-xt-common"
+      rev: "master"
 
     - type: git
-      url: "https://github.com/xen-troops/meta-xt-rcar.git"
-      rev: "0f03aaedce78ae65b88ace6e1ce9294c8355501b"
+      url: "https://github.com/xen-troops/meta-xt-rcar"
+      rev: "master"
 
     - type: git
-      url: "https://github.com/aoscloud/meta-aos-rcar-gen3.git"
-      rev: "v3.1.0"
+      url: "https://github.com/aoscloud/meta-aos-rcar-gen3"
+      rev: "develop"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -271,7 +271,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aoscloud/aos_core_zephyr.git"
-        rev: "v0.3.0"
+        rev: "develop"
 
     builder:
       type: zephyr
