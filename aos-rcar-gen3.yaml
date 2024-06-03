@@ -43,39 +43,39 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "kirkstone"
+      rev: "e575d02196b0013c25f8064e4dbe3fc2a0ef72d0"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "kirkstone"
+      rev: "5a6f7925bd2b885955c942573f70a5594f231563"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "kirkstone"
+      rev: "8f0eb65edaf6d280294c33446a9bb073a50b8c14"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "kirkstone"
+      rev: "a401f4b2816a0b41ce8d9351542658c721935bcd"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos"
-      rev: "develop"
+      rev: "v7.3.1"
 
     - type: git
       url: "https://github.com/renesas-rcar/meta-renesas"
-      rev: "kirkstone-dev"
+      rev: "11221be7ff3a535f17357bc8ac7e2851d0e8ff02"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common"
-      rev: "master"
+      rev: "v0.1.0"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar"
-      rev: "master"
+      rev: "v0.1.0"
 
     - type: git
       url: "https://github.com/aoscloud/meta-aos-rcar-gen3"
-      rev: "develop"
+      rev: "v3.2.0"
 
   # Common configuration options for all yocto-based domains
   conf: &COMMON_CONF
@@ -247,11 +247,11 @@ common_data:
   gfx_sources: &GFX_SOURCES
     - type: git
       url: https://git.openembedded.org/meta-python2
-      rev: kirkstone
+      rev: "f02882e2aa9279ca7becca8d0cedbffe88b5a253"
 
     - type: git
       url: https://github.com/kraj/meta-clang
-      rev: kirkstone
+      rev: "312ff1c39b1bf5d35c0321e873417eb013cea477"
 
     - type: git
       url: ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary
@@ -271,7 +271,7 @@ components:
     sources:
       - type: west
         url: "https://github.com/aoscloud/aos_core_zephyr.git"
-        rev: "develop"
+        rev: "v0.3.3"
 
     builder:
       type: zephyr
