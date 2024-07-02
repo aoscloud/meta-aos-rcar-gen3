@@ -32,8 +32,8 @@ variables:
   AOS_DOMD_NODE_ID: "main-domd"
   AOS_DOMD_NODE_TYPE: "rcar-main-domd"
 
-  AOS_BUNDLE_IMAGE_VERSION: "3.2.0"
-  AOS_ROOTFS_REF_VERSION: "3.1.0"
+  AOS_BUNDLE_IMAGE_VERSION: "3.2.1"
+  AOS_ROOTFS_REF_VERSION: "3.2.0"
   AOS_UM_COMPONENT_PREFIX: "%{AOS_UNIT_MODEL}-%{AOS_UNIT_VERSION}-%{MACHINE}-"
 
   AOS_BASE_IMAGE: "aos-image-rcar"
@@ -43,19 +43,19 @@ common_data:
   sources: &COMMON_SOURCES
     - type: git
       url: "https://git.yoctoproject.org/poky"
-      rev: "kirkstone"
+      rev: "e575d02196b0013c25f8064e4dbe3fc2a0ef72d0"
 
     - type: git
       url: "https://git.openembedded.org/meta-openembedded"
-      rev: "kirkstone"
+      rev: "5a6f7925bd2b885955c942573f70a5594f231563"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-virtualization"
-      rev: "kirkstone"
+      rev: "8f0eb65edaf6d280294c33446a9bb073a50b8c14"
 
     - type: git
       url: "https://git.yoctoproject.org/meta-selinux"
-      rev: "kirkstone"
+      rev: "a401f4b2816a0b41ce8d9351542658c721935bcd"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos"
@@ -63,15 +63,15 @@ common_data:
 
     - type: git
       url: "https://github.com/renesas-rcar/meta-renesas"
-      rev: "kirkstone-dev"
+      rev: "11221be7ff3a535f17357bc8ac7e2851d0e8ff02"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-common"
-      rev: "master"
+      rev: "v0.1.0"
 
     - type: git
       url: "https://github.com/xen-troops/meta-xt-rcar"
-      rev: "master"
+      rev: "v0.1.0"
 
     - type: git
       url: "https://github.com/aosedge/meta-aos-rcar-gen3"
@@ -247,11 +247,11 @@ common_data:
   gfx_sources: &GFX_SOURCES
     - type: git
       url: https://git.openembedded.org/meta-python2
-      rev: kirkstone
+      rev: "f02882e2aa9279ca7becca8d0cedbffe88b5a253"
 
     - type: git
       url: https://github.com/kraj/meta-clang
-      rev: kirkstone
+      rev: "312ff1c39b1bf5d35c0321e873417eb013cea477"
 
     - type: git
       url: ssh://git@gitpct.epam.com/epmd-aepr/img-proprietary
